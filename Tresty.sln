@@ -13,6 +13,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{7625D2FC-A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Build", "build\Build.csproj", "{5D0C8CD7-B116-4834-80D1-379791BF0871}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tresty.Collections.Tests", "test\Tresty.Collections.Tests\Tresty.Collections.Tests.csproj", "{8C0658CA-2DC0-4E4E-B292-016880853DF3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{5D0C8CD7-B116-4834-80D1-379791BF0871}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5D0C8CD7-B116-4834-80D1-379791BF0871}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5D0C8CD7-B116-4834-80D1-379791BF0871}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C0658CA-2DC0-4E4E-B292-016880853DF3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C0658CA-2DC0-4E4E-B292-016880853DF3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C0658CA-2DC0-4E4E-B292-016880853DF3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C0658CA-2DC0-4E4E-B292-016880853DF3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -34,6 +40,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{686D6667-F39D-4965-AA3E-CE077319B42E} = {32D93937-B77E-4921-AEF1-681BCD8F5DC8}
 		{5D0C8CD7-B116-4834-80D1-379791BF0871} = {17611E20-C051-4EA6-8265-1A401C98229B}
+		{8C0658CA-2DC0-4E4E-B292-016880853DF3} = {7625D2FC-AACE-468C-8B13-919E20C4D6F4}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {3678E69B-9119-4045-AD13-353BEEF461F0}

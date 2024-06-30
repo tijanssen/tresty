@@ -15,7 +15,5 @@ public sealed class BuildContext : FrostingContext
 
     public BuildContext(ICakeContext context)
     : base(context)
-{
-        MsBuildConfiguration = context.Argument("configuration", "Release");
-    }
+        => MsBuildConfiguration = context.Argument("configuration", "Release");
 }

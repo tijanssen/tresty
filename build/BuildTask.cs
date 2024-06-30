@@ -17,10 +17,8 @@ namespace Build;
 public sealed class BuildTask : FrostingTask<BuildContext>
 {
     public override void Run(BuildContext context)
-    {
-        context.DotNetBuild("../Tresty.sln", new DotNetBuildSettings
+        => context.DotNetBuild("../Tresty.sln", new DotNetBuildSettings
         {
             Configuration = context.MsBuildConfiguration,
         });
-    }
 }

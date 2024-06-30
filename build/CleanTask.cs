@@ -7,7 +7,5 @@ namespace Build;
 public sealed class CleanTask : FrostingTask<BuildContext>
 {
     public override void Run(BuildContext context)
-    {
-        context.CleanDirectory($"../src/Tresty.Collections/bin/{context.MsBuildConfiguration}");
-    }
+        => context.CleanDirectory($"../src/Tresty.Collections/bin/{context.MsBuildConfiguration}");
 }
