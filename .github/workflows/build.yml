@@ -5,33 +5,38 @@ on:
     branches:
       - master
 jobs:
-  build:
-    name: Build
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+    runs-on: windows-latest
     steps:
-      - name: Get the sources
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Install .NET SDK 6.0.x - 8.0.x
+        uses: actions/checkout@v4
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: |
             8.0.x
-
-      - name: Install .NET Core SDK (global.json)
         uses: actions/setup-dotnet@v3
         with:
           global-json-file: global.json
+        run: .\build.ps1
 
-      - name: Run Cake script
-        id: build-cake
-        uses: cake-build/cake-action@v1
+    runs-on: ubuntu-latest
+    steps:
+        uses: actions/checkout@v4
+        uses: actions/setup-dotnet@v3
         with:
-          target: test
-          cake-version: tool-manifest
+          dotnet-version: |
+            8.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: global.json
+        run: ./build.sh
+
+    runs-on: macos-latest
+    steps:
+        uses: actions/checkout@v4
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            8.0.x
+        uses: actions/setup-dotnet@v3
+        with:
+          global-json-file: global.json
+        run: ./build.sh
