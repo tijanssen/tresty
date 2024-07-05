@@ -6,6 +6,7 @@ on:
       - master
 
 jobs:
+  windows-job:
     runs-on: windows-latest
     steps:
       - name: Check out the repository to the runner
