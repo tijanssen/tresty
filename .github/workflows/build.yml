@@ -4,39 +4,11 @@ on:
   push:
     branches:
       - master
+
 jobs:
     runs-on: windows-latest
     steps:
-        uses: actions/checkout@v4
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            8.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          global-json-file: global.json
+      - name: Check out the repository to the runner
+        uses: actions/checkout@v4  
+      - name: Run a script
         run: .\build.ps1
-
-    runs-on: ubuntu-latest
-    steps:
-        uses: actions/checkout@v4
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            8.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          global-json-file: global.json
-        run: ./build.sh
-
-    runs-on: macos-latest
-    steps:
-        uses: actions/checkout@v4
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: |
-            8.0.x
-        uses: actions/setup-dotnet@v3
-        with:
-          global-json-file: global.json
-        run: ./build.sh
