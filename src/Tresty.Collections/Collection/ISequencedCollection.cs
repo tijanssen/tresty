@@ -1,8 +1,6 @@
-﻿namespace Tresty.Collections;
+﻿namespace Tresty.Collections.Collection;
 
 public interface ISequencedCollection<out T> : ICollection<T>
 {
-    T First();
-    T Last();
     ISequencedCollection<T> Reverse();
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Tresty.Collections;
+namespace Tresty.Collections.Collection;
 
 public interface ICollection<out T> : IEnumerable<T>
 {
