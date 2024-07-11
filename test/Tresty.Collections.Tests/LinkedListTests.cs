@@ -1,3 +1,5 @@
+using Xunit;
+
 namespace Tresty.Collections.Tests;
 
 public class LinkedListTests

@@ -39,8 +39,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\Tresty.Core\Tresty.Core.csproj" />
-  </ItemGroup>
-
 </Project>
