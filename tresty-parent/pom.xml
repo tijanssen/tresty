@@ -8,10 +8,56 @@
 	<packaging>pom</packaging>
 	<name>tresty-parent</name>
 	<description>tresty-parent</description>
-	<url>https://tijanssen.github.com/tresty</url>
+	<url>https://github.com/tijanssen/tresty</url>
+	<inceptionYear>2025</inceptionYear>
+	<organization>
+		<name>Timo Janssen</name>
+		<url>https://github.com/tijanssen/</url>
+	</organization>
+	<licenses>
+		<license>
+			<name>The MIT License</name>
+			<url>https://opensource.org/licenses/MIT</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<id>tijanssen</id>
+			<name>Timo Janssen</name>
+			<email>timo.janssen357@gmail.com</email>
+		</developer>
+	</developers>
+	<scm child.scm.url.inherit.append.path="false">
+		<connection>scm:git:https://github.com/tijanssen/tresty.git</connection>
+		<developerConnection>scm:git:ssh://git@github.com/tijanssen/tresty.git</developerConnection>
+		<url>https://github.com/tijanssen/tresty</url>
+		<tag>HEAD</tag>
+	</scm>
+	<issueManagement>
+		<system>github</system>
+		<url>https://github.com/tijanssen/tresty/issues</url>
+	</issueManagement>
+	<ciManagement>
+		<system>github</system>
+		<url>https://github.com/tijanssen/tresty/actions</url>
+	</ciManagement>
+	<distributionManagement>
+		<repository>
+			<id>sonatype-nexus-staging</id>
+			<name>Nexus Release Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+		<site>
+			<id>github</id>
+			<url>scm:git:ssh://git@github.com/tijanssen/tresty.git</url>
+		</site>
+	</distributionManagement>
 	<properties>
 		<deploy_install.version>3.1.4</deploy_install.version>
 		<java.version>21</java.version>
+		<license.failOnMissingHeader>false</license.failOnMissingHeader>
+		<license.failOnNotUptodateHeader>false</license.failOnNotUptodateHeader>
 		<pmd.failOnViolation>false</pmd.failOnViolation>
 		<pmd.version>7.15.0</pmd.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -211,8 +257,8 @@
 					</executions>
 				</plugin>
 				<plugin>
-	<groupId>com.github.spotbugs</groupId>
-	<artifactId>spotbugs-maven-plugin</artifactId>
+					<groupId>com.github.spotbugs</groupId>
+					<artifactId>spotbugs-maven-plugin</artifactId>
 					<version>4.9.3.2</version>
 					<configuration>
 						<effort>Default</effort>
@@ -228,6 +274,39 @@
 							<phase>verify</phase>
 						</execution>
 					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.6.0</version>
+					<configuration>
+						<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+						<licenseName>mit</licenseName>
+					</configuration>
+					<executions>
+						<execution>
+							<id>license-check-file-header</id>
+							<goals>
+								<goal>check-file-header</goal>
+							</goals>
+							<phase>verify</phase>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>3.6.0</version>
+					<configuration>
+						<configLocation>${basedir}/../config/checkstyle/checkstyle.xml</configLocation>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>com.puppycrawl.tools</groupId>
+							<artifactId>checkstyle</artifactId>
+							<version>10.26.1</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
