@@ -32,8 +32,7 @@ import io.github.tresty.collections.iterator.SequencedIterator;
  *
  * @param <E> the element type
  */
-public sealed class ReverseSequencedIterator<E> implements SequencedIterator<E>
-        permits ReverseMutableSequencedIterator, ReverseListIterator {
+public final class ReverseSequencedIterator<E> implements SequencedIterator<E> {
 
     private SequencedIterator<E> sequencedIterator;
 

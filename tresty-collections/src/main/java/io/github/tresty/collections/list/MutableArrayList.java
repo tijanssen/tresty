@@ -25,10 +25,10 @@
  */
 package io.github.tresty.collections.list;
 
-import java.util.Collection;
-
 import io.github.tresty.collections.iterator.MutableListIterator;
 import io.github.tresty.common.Guard;
+import java.util.Collection;
+import java.util.Optional;
 
 public final class MutableArrayList<E> implements MutableList<E> {
 
@@ -42,6 +42,15 @@ public final class MutableArrayList<E> implements MutableList<E> {
         this(DEFAULT_INITIAL_CAPACITY);
     }
 
+    @SafeVarargs
+    @SuppressWarnings("checkstyle:AvoidInlineConditionals")
+    public MutableArrayList(final E... args) {
+        this(args.length < DEFAULT_INITIAL_CAPACITY ? DEFAULT_INITIAL_CAPACITY : args.length);
+        Guard.againstContainsNull(args);
+        System.arraycopy(args, 0, elementData, 0, args.length);
+        size = args.length;
+    }
+
     @SuppressWarnings("unchecked")
     public MutableArrayList(final int initialCapacity) {
         if (initialCapacity < DEFAULT_INITIAL_CAPACITY) {
@@ -51,43 +60,50 @@ public final class MutableArrayList<E> implements MutableList<E> {
         }
     }
 
-    @SafeVarargs
-    public MutableArrayList(final E... args) {
-        this(args.length < DEFAULT_INITIAL_CAPACITY ? DEFAULT_INITIAL_CAPACITY : args.length);
-        Guard.againstContainsNull(args);
-        System.arraycopy(args, 0, elementData, 0, args.length);
-        size = args.length;
+    @Override
+    public void add(final Collection<? extends E> c) {
     }
 
     @Override
-    public void addFirst(E e) {
+    public void add(final E e) {
     }
 
     @Override
-    public void addLast(E e) {
+    public void add(final io.github.tresty.collections.collection.Collection<? extends E> c) {
     }
 
     @Override
-    public void add(E e) {
+    public void addFirst(final Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+        
     }
 
     @Override
-    public int size() {
-        return size;
+    public void addFirst(final E e) {
     }
 
     @Override
-    public E getFirst() {
+    public void addFirst(final io.github.tresty.collections.collection.Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void addLast(final E e) {
+    }
+
+    @Override
+    public E get(final int index) {
         return null;
     }
 
     @Override
-    public E getLast() {
+    public Optional<E> getFirst() {
         return null;
     }
 
     @Override
-    public E get(int index) {
+    public Optional<E> getLast() {
         return null;
     }
 
@@ -97,18 +113,15 @@ public final class MutableArrayList<E> implements MutableList<E> {
     }
 
     @Override
-    public void add(Collection<? extends E> c) {
-    }
-
-    @Override
-    public void add(io.github.tresty.collections.collection.Collection<? extends E> c) {
-    }
-
-    @Override
     public void removeFirst() {
     }
 
     @Override
     public void removeLast() {
+    }
+
+    @Override
+    public int size() {
+        return size;
     }
 }

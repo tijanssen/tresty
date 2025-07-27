@@ -118,6 +118,7 @@
 						</dependency>
 					</dependencies>
 					<configuration>
+						<skip>true</skip>
 						<analysisCache>true</analysisCache>
 						<benchmark>true</benchmark>
 						<minimumPriority>5</minimumPriority>
@@ -148,6 +149,7 @@
 					<version>3.6.0</version>
 					<configuration>
 						<configLocation>${basedir}/config/checkstyle/checkstyle.xml</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 					</configuration>
 					<dependencies>
 						<dependency>

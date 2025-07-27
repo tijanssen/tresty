@@ -28,6 +28,7 @@ package io.github.tresty.collections.internal.view;
 import io.github.tresty.collections.collection.ImmutableSequencedCollection;
 import io.github.tresty.collections.internal.iterator.ReverseSequencedIterator;
 import io.github.tresty.collections.iterator.SequencedIterator;
+import java.util.Optional;
 
 /**
  * The Class ReverseImmutableSequencedCollectionView.
@@ -36,30 +37,30 @@ import io.github.tresty.collections.iterator.SequencedIterator;
  */
 public final class ReverseImmutableSequencedCollectionView<E> implements ImmutableSequencedCollection<E> {
 
-    /**
-     * Of.
-     *
-     * @param <E>        the element type
-     * @param collection the collection
-     * @return the immutable sequenced collection
-     */
-    public static <E> ImmutableSequencedCollection<E> of(final ImmutableSequencedCollection<E> collection) {
-        if (collection instanceof ReverseImmutableSequencedCollectionView<E> c) {
-            return c.collection;
-        } else {
-            return new ReverseImmutableSequencedCollectionView<>(collection);
-        }
-    }
-
-    private final ImmutableSequencedCollection<E> collection;
+    private final ImmutableSequencedCollection<E> immutableSequencedCollection;
 
     /**
      * Instantiates a new reverse immutable sequenced collection view.
      *
      * @param collection the collection
      */
-    public ReverseImmutableSequencedCollectionView(final ImmutableSequencedCollection<E> collection) {
-        this.collection = collection;
+    public ReverseImmutableSequencedCollectionView(final ImmutableSequencedCollection<E> immutableSequencedCollection) {
+        this.immutableSequencedCollection = immutableSequencedCollection;
+    }
+
+    /**
+     * Of.
+     *
+     * @param <E> the element type
+     * @param collection the collection
+     * @return the immutable sequenced collection
+     */
+    public static <E> ImmutableSequencedCollection<E> of(final ImmutableSequencedCollection<E> collection) {
+        if (collection instanceof ReverseImmutableSequencedCollectionView<E> c) {
+            return c.immutableSequencedCollection;
+        } else {
+            return new ReverseImmutableSequencedCollectionView<>(collection);
+        }
     }
 
     /**
@@ -68,8 +69,8 @@ public final class ReverseImmutableSequencedCollectionView<E> implements Immutab
      * @return the first
      */
     @Override
-    public E getFirst() {
-        return collection.getLast();
+    public Optional<E> getFirst() {
+        return immutableSequencedCollection.getLast();
     }
 
     /**
@@ -78,8 +79,8 @@ public final class ReverseImmutableSequencedCollectionView<E> implements Immutab
      * @return the last
      */
     @Override
-    public E getLast() {
-        return collection.getFirst();
+    public Optional<E> getLast() {
+        return immutableSequencedCollection.getFirst();
     }
 
     /**
@@ -89,7 +90,7 @@ public final class ReverseImmutableSequencedCollectionView<E> implements Immutab
      */
     @Override
     public SequencedIterator<E> iterator() {
-        return new ReverseSequencedIterator<>(collection.iterator());
+        return new ReverseSequencedIterator<>(immutableSequencedCollection.iterator());
     }
 
     /**
@@ -99,6 +100,6 @@ public final class ReverseImmutableSequencedCollectionView<E> implements Immutab
      */
     @Override
     public int size() {
-        return collection.size();
+        return immutableSequencedCollection.size();
     }
 }

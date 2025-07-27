@@ -28,18 +28,19 @@ package io.github.tresty.collections.internal;
 /**
  * The Class Utility.
  */
-public class Utility {
+public final class Utility {
+
+    @SuppressWarnings("checkstyle:MagicNumber")
+    static final int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
 
     private Utility() {
     }
 
-    static int MAX_ARRAY_SIZE = Integer.MAX_VALUE - 8;
-
     /**
      * New length.
      *
-     * @param oldLength  the old length
-     * @param minGrowth  the min growth
+     * @param oldLength the old length
+     * @param minGrowth the min growth
      * @param prefGrowth the pref growth
      * @return the int
      */

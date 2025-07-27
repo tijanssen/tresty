@@ -28,6 +28,7 @@ package io.github.tresty.collections.internal.view;
 import io.github.tresty.collections.internal.iterator.ReverseListIterator;
 import io.github.tresty.collections.iterator.ListIterator;
 import io.github.tresty.collections.list.List;
+import java.util.Optional;
 
 /**
  * The Class ReverseListView.
@@ -35,21 +36,6 @@ import io.github.tresty.collections.list.List;
  * @param <E> the element type
  */
 public final class ReverseListView<E> implements List<E> {
-
-    /**
-     * Of.
-     *
-     * @param <E>  the element type
-     * @param list the list
-     * @return the list
-     */
-    public static <E> List<E> of(final List<E> list) {
-        if (list instanceof ReverseListView<E> l) {
-            return l.list;
-        } else {
-            return new ReverseListView<>(list);
-        }
-    }
 
     private final List<E> list;
 
@@ -63,6 +49,21 @@ public final class ReverseListView<E> implements List<E> {
     }
 
     /**
+     * Of.
+     *
+     * @param <E> the element type
+     * @param list the list
+     * @return the list
+     */
+    public static <E> List<E> of(final List<E> list) {
+        if (list instanceof ReverseListView<E> l) {
+            return l.list;
+        } else {
+            return new ReverseListView<>(list);
+        }
+    }
+
+    /**
      * Gets the.
      *
      * @param index the index
@@ -70,7 +71,7 @@ public final class ReverseListView<E> implements List<E> {
      */
     @Override
     public E get(final int index) {
-        int reverseIndex = list.size() - index - 1;
+        final var reverseIndex = list.size() - index - 1;
         return list.get(reverseIndex);
     }
 
@@ -80,7 +81,7 @@ public final class ReverseListView<E> implements List<E> {
      * @return the first
      */
     @Override
-    public E getFirst() {
+    public Optional<E> getFirst() {
         return list.getLast();
     }
 
@@ -90,7 +91,7 @@ public final class ReverseListView<E> implements List<E> {
      * @return the last
      */
     @Override
-    public E getLast() {
+    public Optional<E> getLast() {
         return list.getFirst();
     }
 

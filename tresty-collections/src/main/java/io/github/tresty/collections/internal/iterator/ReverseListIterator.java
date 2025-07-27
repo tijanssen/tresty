@@ -32,9 +32,9 @@ import io.github.tresty.collections.iterator.ListIterator;
  *
  * @param <E> the element type
  */
-public final class ReverseListIterator<E> extends ReverseSequencedIterator<E> implements ListIterator<E> {
+public final class ReverseListIterator<E> implements ListIterator<E> {
 
-    private final ListIterator<E> listIterator;
+    private final ListIterator<E> iterator;
 
     /**
      * Instantiates a new reverse list iterator.
@@ -42,8 +42,22 @@ public final class ReverseListIterator<E> extends ReverseSequencedIterator<E> im
      * @param iterator the iterator
      */
     public ReverseListIterator(final ListIterator<E> iterator) {
-        super(iterator);
-        listIterator = iterator;
+        this.iterator = iterator;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasPrevious();
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public E next() {
+        return iterator.previous();
     }
 
     /**
@@ -53,7 +67,12 @@ public final class ReverseListIterator<E> extends ReverseSequencedIterator<E> im
      */
     @Override
     public int nextIndex() {
-        return listIterator.previousIndex();
+        return iterator.previousIndex();
+    }
+
+    @Override
+    public E previous() {
+        return iterator.next();
     }
 
     /**
@@ -63,6 +82,6 @@ public final class ReverseListIterator<E> extends ReverseSequencedIterator<E> im
      */
     @Override
     public int previousIndex() {
-        return listIterator.nextIndex();
+        return iterator.nextIndex();
     }
 }

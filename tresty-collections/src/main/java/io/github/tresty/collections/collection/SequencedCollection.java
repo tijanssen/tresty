@@ -27,6 +27,7 @@ package io.github.tresty.collections.collection;
 
 import io.github.tresty.collections.internal.view.ReverseSequencedCollectionView;
 import io.github.tresty.collections.iterable.SequencedIterable;
+import java.util.Optional;
 
 /// The Interface SequencedCollection.
 ///
@@ -44,14 +45,14 @@ public interface SequencedCollection<E> extends Collection<E>, SequencedIterable
      *
      * @return the first
      */
-    E getFirst();
+    Optional<E> getFirst();
 
     /**
      * Gets the last.
      *
      * @return the last
      */
-    E getLast();
+    Optional<E> getLast();
 
     /**
      * Reversed.

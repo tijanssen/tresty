@@ -33,11 +33,14 @@ import io.github.tresty.common.GuardViolationException;
  */
 public final class Guard {
 
+    private Guard() {
+    }
+
     /**
      * Against contains null.
      *
      * @param <T> the generic type
-     * @param c   the c
+     * @param c the c
      */
     public static <T> void againstContainsNull(final Collection<? extends T> c) {
         for (final var element : c) {
@@ -50,8 +53,8 @@ public final class Guard {
     /**
      * Against contains null.
      *
-     * @param <T>     the generic type
-     * @param c       the c
+     * @param <T> the generic type
+     * @param c the c
      * @param message the message
      */
     public static <T> void againstContainsNull(final Collection<? extends T> c, final String message) {
@@ -66,7 +69,7 @@ public final class Guard {
      * Against empty.
      *
      * @param <T> the generic type
-     * @param c   the c
+     * @param c the c
      */
     public static <T> void againstEmpty(final Collection<? extends T> c) {
         if (c.isEmpty()) {
@@ -77,8 +80,8 @@ public final class Guard {
     /**
      * Against empty.
      *
-     * @param <T>     the generic type
-     * @param c       the c
+     * @param <T> the generic type
+     * @param c the c
      * @param message the message
      */
     public static <T> void againstEmpty(final Collection<? extends T> c, final String message) {
@@ -91,7 +94,7 @@ public final class Guard {
      * Against non empty.
      *
      * @param <T> the generic type
-     * @param c   the c
+     * @param c the c
      */
     public static <T> void againstNonEmpty(final Collection<? extends T> c) {
         if (!c.isEmpty()) {
@@ -102,16 +105,13 @@ public final class Guard {
     /**
      * Against non empty.
      *
-     * @param <T>     the generic type
-     * @param c       the c
+     * @param <T> the generic type
+     * @param c the c
      * @param message the message
      */
     public static <T> void againstNonEmpty(final Collection<? extends T> c, final String message) {
         if (!c.isEmpty()) {
             throw new GuardViolationException(message);
         }
-    }
-
-    private Guard() {
     }
 }

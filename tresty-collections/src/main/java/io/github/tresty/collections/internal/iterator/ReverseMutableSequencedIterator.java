@@ -32,10 +32,9 @@ import io.github.tresty.collections.iterator.MutableSequencedIterator;
  *
  * @param <E> the element type
  */
-public sealed class ReverseMutableSequencedIterator<E> extends ReverseSequencedIterator<E>
-        implements MutableSequencedIterator<E> permits ReverseMutableListIterator {
+public final class ReverseMutableSequencedIterator<E> implements MutableSequencedIterator<E> {
 
-    private MutableSequencedIterator<E> mutableSequencedIterator;
+    private MutableSequencedIterator<E> iterator;
 
     /**
      * Instantiates a new reverse mutable sequenced iterator.
@@ -43,8 +42,7 @@ public sealed class ReverseMutableSequencedIterator<E> extends ReverseSequencedI
      * @param iterator the iterator
      */
     public ReverseMutableSequencedIterator(final MutableSequencedIterator<E> iterator) {
-        super(iterator);
-        mutableSequencedIterator = iterator;
+        this.iterator = iterator;
     }
 
     /**
@@ -53,8 +51,8 @@ public sealed class ReverseMutableSequencedIterator<E> extends ReverseSequencedI
      * @param e the e
      */
     @Override
-    public void addAfter(E e) {
-        mutableSequencedIterator.addBefore(e);
+    public void addAfter(final E e) {
+        iterator.addBefore(e);
     }
 
     /**
@@ -63,8 +61,33 @@ public sealed class ReverseMutableSequencedIterator<E> extends ReverseSequencedI
      * @param e the e
      */
     @Override
-    public void addBefore(E e) {
-        mutableSequencedIterator.addAfter(e);
+    public void addBefore(final E e) {
+        iterator.addAfter(e);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasPrevious();
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public E next() {
+        return iterator.previous();
+    }
+
+    @Override
+    public E previous() {
+        return iterator.next();
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
     }
 
     /**
@@ -73,7 +96,7 @@ public sealed class ReverseMutableSequencedIterator<E> extends ReverseSequencedI
      * @param e the e
      */
     @Override
-    public void set(E e) {
-        mutableSequencedIterator.set(e);
+    public void set(final E e) {
+        iterator.set(e);
     }
 }

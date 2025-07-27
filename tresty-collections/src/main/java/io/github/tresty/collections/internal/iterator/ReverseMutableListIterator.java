@@ -32,10 +32,9 @@ import io.github.tresty.collections.iterator.MutableListIterator;
  *
  * @param <E> the element type
  */
-public final class ReverseMutableListIterator<E> extends ReverseMutableSequencedIterator<E>
-        implements MutableListIterator<E> {
+public final class ReverseMutableListIterator<E> implements MutableListIterator<E> {
 
-    private final MutableListIterator<E> mutableListIterator;
+    private final MutableListIterator<E> iterator;
 
     /**
      * Instantiates a new reverse mutable list iterator.
@@ -43,8 +42,32 @@ public final class ReverseMutableListIterator<E> extends ReverseMutableSequenced
      * @param iterator the iterator
      */
     public ReverseMutableListIterator(final MutableListIterator<E> iterator) {
-        super(iterator);
-        mutableListIterator = iterator;
+        this.iterator = iterator;
+    }
+
+    @Override
+    public void addAfter(final E e) {
+        iterator.addBefore(e);
+    }
+
+    @Override
+    public void addBefore(final E e) {
+        iterator.addAfter(e);
+    }
+
+    @Override
+    public boolean hasNext() {
+        return iterator.hasPrevious();
+    }
+
+    @Override
+    public boolean hasPrevious() {
+        return iterator.hasNext();
+    }
+
+    @Override
+    public E next() {
+        return iterator.previous();
     }
 
     /**
@@ -54,7 +77,12 @@ public final class ReverseMutableListIterator<E> extends ReverseMutableSequenced
      */
     @Override
     public int nextIndex() {
-        return mutableListIterator.previousIndex();
+        return iterator.previousIndex();
+    }
+
+    @Override
+    public E previous() {
+        return iterator.next();
     }
 
     /**
@@ -64,6 +92,16 @@ public final class ReverseMutableListIterator<E> extends ReverseMutableSequenced
      */
     @Override
     public int previousIndex() {
-        return mutableListIterator.previousIndex();
+        return iterator.nextIndex();
+    }
+
+    @Override
+    public void remove() {
+        iterator.remove();
+    }
+
+    @Override
+    public void set(final E e) {
+        iterator.set(e);
     }
 }

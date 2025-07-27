@@ -27,6 +27,7 @@ package io.github.tresty.collections.collection;
 
 import io.github.tresty.collections.internal.view.ReverseMutableSequencedCollectionView;
 import io.github.tresty.collections.iterable.MutableSequencedIterable;
+import io.github.tresty.common.Guard;
 
 /**
  * The Interface MutableSequencedCollection.
@@ -34,7 +35,58 @@ import io.github.tresty.collections.iterable.MutableSequencedIterable;
  * @param <E> the element type
  */
 public interface MutableSequencedCollection<E>
-        extends MutableCollection<E>, SequencedCollection<E>, MutableSequencedIterable<E> {
+    extends MutableCollection<E>, SequencedCollection<E>, MutableSequencedIterable<E> {
+
+    @Override
+    default void add(final Collection<? extends E> c) {
+        addLast(c);
+    }
+
+    @Override
+    default void add(final E e) {
+        addLast(e);
+    }
+
+    @Override
+    default void add(final java.util.Collection<? extends E> c) {
+        addLast(c);
+    }
+
+    void addFirst(Collection<? extends E> c);
+
+    /**
+     * Adds the first.
+     *
+     * @param e the e
+     */
+    void addFirst(E e);
+
+    void addFirst(java.util.Collection<? extends E> c);
+
+    default void addLast(final Collection<? extends E> c) {
+        Guard.againstNull(c);
+        for (final var e : c) {
+            addLast(e);
+        }
+    }
+
+    /**
+     * Adds the last.
+     *
+     * @param e the e
+     */
+    void addLast(E e);
+
+    default void addLast(final java.util.Collection<? extends E> c) {
+        Guard.againstNull(c);
+        for (final var e : c) {
+            addLast(e);
+        }
+    }
+
+    void removeFirst();
+
+    void removeLast();
 
     /**
      * Reversed.
@@ -45,22 +97,4 @@ public interface MutableSequencedCollection<E>
     default MutableSequencedCollection<E> reversed() {
         return ReverseMutableSequencedCollectionView.of(this);
     }
-
-    /**
-     * Adds the first.
-     *
-     * @param e the e
-     */
-    void addFirst(E e);
-
-    /**
-     * Adds the last.
-     *
-     * @param e the e
-     */
-    void addLast(E e);
-
-    void removeFirst();
-
-    void removeLast();
 }

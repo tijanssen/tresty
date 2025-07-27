@@ -25,29 +25,64 @@
  */
 package io.github.tresty.collections.collection;
 
-import java.util.Collection;
-
 import io.github.tresty.collections.iterator.MutableSequencedIterator;
+import io.github.tresty.common.Guard;
+import java.util.Optional;
+import org.jspecify.annotations.Nullable;
 
 public final class LinkedList<E> implements MutableSequencedCollection<E> {
 
-    @Override
-    public void add(E e) {
+    private final Node<E> root;
+    private int size;
+
+    public LinkedList() {
+        root = new Node<>(null);
+        root.next = root;
+        root.previous = root;
+    }
+
+    public LinkedList(final Collection<? extends E> c) {
+        this();
+        Guard.againstNull(c);
+        for (final var element : c) {
+            final var last = root.previous;
+            final var newNode = new Node<>(element);
+            last.next = newNode;
+            newNode.previous = last;
+            newNode.next = root;
+            root.previous = newNode;
+        }
+        size = c.size();
     }
 
     @Override
-    public int size() {
-        return 0;
+    public void addFirst(final Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
-    public E getFirst() {
-        return null;
+    public void addFirst(final E e) {
     }
 
     @Override
-    public E getLast() {
-        return null;
+    public void addFirst(final java.util.Collection<? extends E> c) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void addLast(final E e) {
+    }
+
+    @Override
+    public Optional<E> getFirst() {
+        return Optional.of(root.next.value);
+    }
+
+    @Override
+    public Optional<E> getLast() {
+        return Optional.of(root.previous.value);
     }
 
     @Override
@@ -56,26 +91,45 @@ public final class LinkedList<E> implements MutableSequencedCollection<E> {
     }
 
     @Override
-    public void addFirst(E e) {
-    }
-
-    @Override
-    public void addLast(E e) {
-    }
-
-    @Override
-    public void add(Collection<? extends E> c) {
-    }
-
-    @Override
-    public void add(io.github.tresty.collections.collection.Collection<? extends E> c) {
-    }
-
-    @Override
     public void removeFirst() {
+        Guard.againstZero(size);
+        final var first = root.next;
+        final var newFirst = root.next.next;
+        newFirst.previous = root;
+        root.next = newFirst;
+        first.next = null;
+        first.previous = null;
+        first.value = null;
+        size--;
     }
 
     @Override
     public void removeLast() {
+        Guard.againstZero(size);
+        final var last = root.previous;
+        final var newLast = root.previous.previous;
+        newLast.next = root;
+        root.previous = newLast;
+        last.next = null;
+        last.previous = null;
+        last.value = null;
+        size--;
+    }
+
+    @Override
+    public int size() {
+        return size;
+    }
+
+    @SuppressWarnings("checkstyle:VisibilityModifier")
+    private static final class Node<E> {
+
+        public Node<E> next;
+        public Node<E> previous;
+        public E value;
+
+        Node(final @Nullable E value) {
+            this.value = value;
+        }
     }
 }

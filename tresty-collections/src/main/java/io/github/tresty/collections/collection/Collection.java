@@ -25,10 +25,9 @@
  */
 package io.github.tresty.collections.collection;
 
+import io.github.tresty.common.Guard;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
-
-import io.github.tresty.common.Guard;
 
 /**
  * The Interface Collection.
@@ -76,7 +75,7 @@ public interface Collection<E> extends Iterable<E> {
     /**
      * Contains all.
      *
-     * @param c         the c
+     * @param c the c
      * @param predicate the predicate
      * @return true, if successful
      */
@@ -89,8 +88,9 @@ public interface Collection<E> extends Iterable<E> {
                     break;
                 }
             }
-            if (!found)
+            if (!found) {
                 return false;
+            }
         }
         return true;
     }
@@ -108,12 +108,12 @@ public interface Collection<E> extends Iterable<E> {
     /**
      * Contains all.
      *
-     * @param c         the c
+     * @param c the c
      * @param predicate the predicate
      * @return true, if successful
      */
     default boolean containsAll(final java.util.Collection<? extends E> c,
-            final BiPredicate<? super E, ? super E> predicate) {
+        final BiPredicate<? super E, ? super E> predicate) {
         for (final var item : c) {
             var found = false;
             for (final var element : this) {
@@ -142,7 +142,7 @@ public interface Collection<E> extends Iterable<E> {
     /**
      * Contains any.
      *
-     * @param c         the c
+     * @param c the c
      * @param predicate the predicate
      * @return true, if successful
      */
@@ -170,12 +170,12 @@ public interface Collection<E> extends Iterable<E> {
     /**
      * Contains any.
      *
-     * @param c         the c
+     * @param c the c
      * @param predicate the predicate
      * @return true, if successful
      */
     default boolean containsAny(final java.util.Collection<? extends E> c,
-            final BiPredicate<? super E, ? super E> predicate) {
+        final BiPredicate<? super E, ? super E> predicate) {
         for (final var item : this) {
             for (final var element : c) {
                 if (predicate.test(item, element)) {

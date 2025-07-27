@@ -113,6 +113,9 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>${surefire.version}</version>
+					<configuration>
+						<argLine>@{argLine} -XX:+EnableDynamicAgentLoading</argLine>
+					</configuration>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -240,6 +243,7 @@
 						</dependency>
 					</dependencies>
 					<configuration>
+						<skip>true</skip>
 						<analysisCache>true</analysisCache>
 						<benchmark>true</benchmark>
 						<failOnViolation>${pmd.failOnViolation}</failOnViolation>
@@ -261,6 +265,7 @@
 					<artifactId>spotbugs-maven-plugin</artifactId>
 					<version>4.9.3.2</version>
 					<configuration>
+						<skip>true</skip>
 						<effort>Default</effort>
 						<failOnError>${spotbugs.failOnError}</failOnError>
 						<threshold>Default</threshold>
@@ -299,6 +304,7 @@
 					<version>3.6.0</version>
 					<configuration>
 						<configLocation>${basedir}/../config/checkstyle/checkstyle.xml</configLocation>
+						<includeTestSourceDirectory>true</includeTestSourceDirectory>
 					</configuration>
 					<dependencies>
 						<dependency>

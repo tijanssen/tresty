@@ -28,6 +28,7 @@ package io.github.tresty.collections.internal.view;
 import io.github.tresty.collections.collection.SequencedCollection;
 import io.github.tresty.collections.internal.iterator.ReverseSequencedIterator;
 import io.github.tresty.collections.iterator.SequencedIterator;
+import java.util.Optional;
 
 /**
  * The Class ReverseSequencedCollectionView.
@@ -36,30 +37,30 @@ import io.github.tresty.collections.iterator.SequencedIterator;
  */
 public final class ReverseSequencedCollectionView<E> implements SequencedCollection<E> {
 
-    /**
-     * Of.
-     *
-     * @param <E>        the element type
-     * @param collection the collection
-     * @return the sequenced collection
-     */
-    public static <E> SequencedCollection<E> of(final SequencedCollection<E> collection) {
-        if (collection instanceof ReverseSequencedCollectionView<E> c) {
-            return c.collection;
-        } else {
-            return new ReverseSequencedCollectionView<>(collection);
-        }
-    }
-
-    private final SequencedCollection<E> collection;
+    private final SequencedCollection<E> sequencedCollection;
 
     /**
      * Instantiates a new reverse sequenced collection view.
      *
      * @param collection the collection
      */
-    public ReverseSequencedCollectionView(final SequencedCollection<E> collection) {
-        this.collection = collection;
+    public ReverseSequencedCollectionView(final SequencedCollection<E> sequencedCollection) {
+        this.sequencedCollection = sequencedCollection;
+    }
+
+    /**
+     * Of.
+     *
+     * @param <E> the element type
+     * @param collection the collection
+     * @return the sequenced collection
+     */
+    public static <E> SequencedCollection<E> of(final SequencedCollection<E> collection) {
+        if (collection instanceof ReverseSequencedCollectionView<E> c) {
+            return c.sequencedCollection;
+        } else {
+            return new ReverseSequencedCollectionView<>(collection);
+        }
     }
 
     /**
@@ -68,8 +69,8 @@ public final class ReverseSequencedCollectionView<E> implements SequencedCollect
      * @return the first
      */
     @Override
-    public E getFirst() {
-        return collection.getLast();
+    public Optional<E> getFirst() {
+        return sequencedCollection.getLast();
     }
 
     /**
@@ -78,8 +79,8 @@ public final class ReverseSequencedCollectionView<E> implements SequencedCollect
      * @return the last
      */
     @Override
-    public E getLast() {
-        return collection.getFirst();
+    public Optional<E> getLast() {
+        return sequencedCollection.getFirst();
     }
 
     /**
@@ -89,7 +90,7 @@ public final class ReverseSequencedCollectionView<E> implements SequencedCollect
      */
     @Override
     public SequencedIterator<E> iterator() {
-        return new ReverseSequencedIterator<>(collection.iterator());
+        return new ReverseSequencedIterator<>(sequencedCollection.iterator());
     }
 
     /**
@@ -99,6 +100,6 @@ public final class ReverseSequencedCollectionView<E> implements SequencedCollect
      */
     @Override
     public int size() {
-        return collection.size();
+        return sequencedCollection.size();
     }
 }

@@ -28,6 +28,7 @@ package io.github.tresty.collections.internal.view;
 import io.github.tresty.collections.internal.iterator.ReverseListIterator;
 import io.github.tresty.collections.iterator.ListIterator;
 import io.github.tresty.collections.list.ImmutableList;
+import java.util.Optional;
 
 /**
  * The Class ReverseImmutableListView.
@@ -36,31 +37,31 @@ import io.github.tresty.collections.list.ImmutableList;
  */
 public final class ReverseImmutableListView<E> implements ImmutableList<E> {
 
-    /**
-     * Of.
-     *
-     * @param <E>  the element type
-     * @param list the list
-     * @return the immutable list
-     */
-    public static <E> ImmutableList<E> of(final ImmutableList<E> list) {
-        if (list instanceof ReverseImmutableListView<E> l) {
-            return l.list;
-        } else {
-            return new ReverseImmutableListView<>(list);
-        }
-    }
-
     /** The list. */
-    private final ImmutableList<E> list;
+    private final ImmutableList<E> immutableList;
 
     /**
      * Instantiates a new reverse immutable list view.
      *
      * @param list the list
      */
-    public ReverseImmutableListView(final ImmutableList<E> list) {
-        this.list = list;
+    public ReverseImmutableListView(final ImmutableList<E> immutableList) {
+        this.immutableList = immutableList;
+    }
+
+    /**
+     * Of.
+     *
+     * @param <E> the element type
+     * @param list the list
+     * @return the immutable list
+     */
+    public static <E> ImmutableList<E> of(final ImmutableList<E> list) {
+        if (list instanceof ReverseImmutableListView<E> l) {
+            return l.immutableList;
+        } else {
+            return new ReverseImmutableListView<>(list);
+        }
     }
 
     /**
@@ -71,8 +72,8 @@ public final class ReverseImmutableListView<E> implements ImmutableList<E> {
      */
     @Override
     public E get(final int index) {
-        int reverseIndex = list.size() - index - 1;
-        return list.get(reverseIndex);
+        final var reverseIndex = immutableList.size() - index - 1;
+        return immutableList.get(reverseIndex);
     }
 
     /**
@@ -81,8 +82,8 @@ public final class ReverseImmutableListView<E> implements ImmutableList<E> {
      * @return the first
      */
     @Override
-    public E getFirst() {
-        return list.getLast();
+    public Optional<E> getFirst() {
+        return immutableList.getLast();
     }
 
     /**
@@ -91,8 +92,8 @@ public final class ReverseImmutableListView<E> implements ImmutableList<E> {
      * @return the last
      */
     @Override
-    public E getLast() {
-        return list.getFirst();
+    public Optional<E> getLast() {
+        return immutableList.getFirst();
     }
 
     /**
@@ -102,7 +103,7 @@ public final class ReverseImmutableListView<E> implements ImmutableList<E> {
      */
     @Override
     public ListIterator<E> iterator() {
-        return new ReverseListIterator<>(list.iterator());
+        return new ReverseListIterator<>(immutableList.iterator());
     }
 
     /**
@@ -112,6 +113,6 @@ public final class ReverseImmutableListView<E> implements ImmutableList<E> {
      */
     @Override
     public int size() {
-        return list.size();
+        return immutableList.size();
     }
 }

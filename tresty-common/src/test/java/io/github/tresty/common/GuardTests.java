@@ -10,10 +10,10 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
+ *
  * The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * 
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,7 +29,6 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -38,7 +37,26 @@ import org.junit.jupiter.params.provider.EmptySource;
 import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
+@SuppressWarnings({ "checkstyle:MagicNumber", "MethodName" })
 class GuardTests {
+
+    private static final String FAILURE_MESSAGE = "Guard failed.";
+    private static final String LIST_TEST_ENTRY = "test";
+
+    @Test
+    void isUtilityClass() {
+        for (final var method : Guard.class.getDeclaredMethods()) {
+            final var modifiers = method.getModifiers();
+            Assertions.assertThat(Modifier.isStatic(modifiers)).isTrue();
+        }
+        final var constructors = Guard.class.getDeclaredConstructors();
+        Assertions.assertThat(constructors).hasSize(1);
+        final var constructor = constructors[0];
+        final var modifiers = constructor.getModifiers();
+        Assertions.assertThat(Modifier.isPrivate(modifiers)).isTrue();
+        constructor.setAccessible(true);
+        Assertions.assertThatNoException().isThrownBy(() -> constructor.newInstance());
+    }
 
     @Nested
     class AgainstContainsNull {
@@ -49,7 +67,7 @@ class GuardTests {
             @Test
             void collectionContainsNoNull_NoExceptionIsThrown() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatNoException().isThrownBy(() -> Guard.againstContainsNull(list));
             }
 
@@ -58,7 +76,7 @@ class GuardTests {
                 final var list = new ArrayList<String>();
                 list.add(null);
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstContainsNull(list));
+                    .isThrownBy(() -> Guard.againstContainsNull(list));
             }
         }
 
@@ -68,7 +86,7 @@ class GuardTests {
             @Test
             void collectionContainsNoNull_NoExceptionIsThrown() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatNoException().isThrownBy(() -> Guard.againstContainsNull(list, FAILURE_MESSAGE));
             }
 
@@ -77,8 +95,7 @@ class GuardTests {
                 final var list = new ArrayList<String>();
                 list.add(null);
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstContainsNull(list, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstContainsNull(list, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -95,7 +112,7 @@ class GuardTests {
             void arrayContainsNull_ThrowsGuardViolationException() {
                 final Integer[] array = { null };
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstContainsNull(array));
+                    .isThrownBy(() -> Guard.againstContainsNull(array));
             }
         }
 
@@ -112,8 +129,7 @@ class GuardTests {
             void arrayContainsNull_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 final Integer[] array = { null };
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstContainsNull(array, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstContainsNull(array, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
     }
@@ -127,13 +143,13 @@ class GuardTests {
             @Test
             void collectionIsEmpty_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstEmpty(new ArrayList<String>()));
+                    .isThrownBy(() -> Guard.againstEmpty(new ArrayList<String>()));
             }
 
             @Test
             void collectionIsNotEmpty_NoExceptionIsThrown() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatNoException().isThrownBy(() -> Guard.againstEmpty(list));
             }
         }
@@ -144,14 +160,14 @@ class GuardTests {
             @Test
             void collectionIsEmpty_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstEmpty(new ArrayList<String>(), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstEmpty(new ArrayList<String>(), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @Test
             void collectionIsNotEmpty_NoExceptionIsThrown() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatNoException().isThrownBy(() -> Guard.againstEmpty(list, FAILURE_MESSAGE));
             }
         }
@@ -162,7 +178,7 @@ class GuardTests {
             @Test
             void arrayIsEmpty_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstEmpty(new String[0]));
+                    .isThrownBy(() -> Guard.againstEmpty(new String[0]));
             }
 
             @Test
@@ -177,8 +193,7 @@ class GuardTests {
             @Test
             void arrayIsEmpty_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstEmpty(new String[0], FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstEmpty(new String[0], FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -191,13 +206,18 @@ class GuardTests {
     @Nested
     class AgainstFalse {
 
+        @Test
+        void expressionIsTrue_NoExceptionIsThrown() {
+            Assertions.assertThatNoException().isThrownBy(() -> Guard.againstFalse(true, FAILURE_MESSAGE));
+        }
+
         @Nested
         class WithBooleanExpression {
 
             @Test
             void expressionIsFalse_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstFalse(false));
+                    .isThrownBy(() -> Guard.againstFalse(false));
             }
 
             @Test
@@ -212,13 +232,8 @@ class GuardTests {
             @Test
             void epressionIsFalse_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstFalse(false, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstFalse(false, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
-        }
-
-        @Test
-        void expressionIsTrue_NoExceptionIsThrown() {
-            Assertions.assertThatNoException().isThrownBy(() -> Guard.againstFalse(true, FAILURE_MESSAGE));
         }
     }
 
@@ -232,14 +247,14 @@ class GuardTests {
             @ValueSource(strings = { "0.2", "0.4", "0.6" })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value)));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0.0", "-0.2", "-0.4" })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value)));
             }
         }
 
@@ -250,15 +265,15 @@ class GuardTests {
             @ValueSource(strings = { "0.2", "0.4", "0.6" })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0.0", "-0.2", "-0.4" })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigDecimal(value), FAILURE_MESSAGE));
             }
         }
 
@@ -269,14 +284,14 @@ class GuardTests {
             @ValueSource(strings = { "1", "2", "3" })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value)));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0", "-1", "-2" })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value)));
             }
         }
 
@@ -287,15 +302,15 @@ class GuardTests {
             @ValueSource(strings = { "1", "2", "3" })
             void valueIsGreaterThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0", "-1", "-2" })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(new BigInteger(value), FAILURE_MESSAGE));
             }
         }
 
@@ -306,7 +321,7 @@ class GuardTests {
             @ValueSource(bytes = { 1, 2, 3 })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -323,15 +338,15 @@ class GuardTests {
             @ValueSource(bytes = { 1, 2, 3 })
             void valueIsGreaterThanZero_THrowsGuardViolationExceptionWithExpectedMessage(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(bytes = { 0, -1, -2 })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final byte value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
 
@@ -342,7 +357,7 @@ class GuardTests {
             @ValueSource(doubles = { 0.1d, 0.01d, 0.001d })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -359,15 +374,15 @@ class GuardTests {
             @ValueSource(doubles = { 0.1d, 0.01d, 0.001d })
             void valueIsGreaterThanZero_ThrowsGuradViolationExceptionWithExpectedMessage(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(doubles = { 0.0d, -0.1d, -0.01d })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final double value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
 
@@ -378,7 +393,7 @@ class GuardTests {
             @ValueSource(floats = { 0.1f, 0.01f, 0.01f })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -395,15 +410,15 @@ class GuardTests {
             @ValueSource(floats = { 0.1f, 0.01f, 0.001f })
             void valueIsGreaterThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(floats = { 0.0f, -0.1f, -0.01f })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final float value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
 
@@ -414,7 +429,7 @@ class GuardTests {
             @ValueSource(ints = { 1, 2, 3 })
             void valueIsGreaterThanZero_ThrowsGuradViolationException(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -431,15 +446,15 @@ class GuardTests {
             @ValueSource(ints = { 1, 2, 3 })
             void valueIsGreaterThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(ints = { 0, -1, -2 })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final int value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
 
@@ -450,7 +465,7 @@ class GuardTests {
             @ValueSource(longs = { 1L, 2L, 3L })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -467,15 +482,15 @@ class GuardTests {
             @ValueSource(longs = { 1L, 2L, 3L })
             void valueIsGreaterThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(longs = { 0L, -1L, -2L })
             void valueIsNotGraterThanZero_NoExceptionIsThrown(final long value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
 
@@ -486,7 +501,7 @@ class GuardTests {
             @ValueSource(shorts = { 1, 2, 3 })
             void valueIsGreaterThanZero_ThrowsGuardViolationException(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value));
             }
 
             @ParameterizedTest
@@ -503,15 +518,15 @@ class GuardTests {
             @ValueSource(shorts = { 1, 2, 3 })
             void valueIsGreaterThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(shorts = { 0, -1, -2 })
             void valueIsNotGreaterThanZero_NoExceptionIsThrown(final short value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstGreaterThanZero(value, FAILURE_MESSAGE));
             }
         }
     }
@@ -526,7 +541,7 @@ class GuardTests {
             @ValueSource(ints = { -1, 4 })
             void indexIsInvalid_ThrowsGuardViolationException(final int index) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4));
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4));
             }
 
             @ParameterizedTest
@@ -543,15 +558,15 @@ class GuardTests {
             @ValueSource(ints = { -1, 4 })
             void indexIsInvalid_ThrowsGuardViolationExceptionWithExpectedMessage(final int index) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(ints = { 0, 1, 2, 3 })
             void indexIsValid_NoExceptionIsThrown(final int index) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE));
             }
         }
 
@@ -562,7 +577,7 @@ class GuardTests {
             @ValueSource(longs = { -1L, 4L })
             void indexIsInvalid_ThrowsGuardViolationException(final long index) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4));
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4));
             }
 
             @ParameterizedTest
@@ -579,15 +594,15 @@ class GuardTests {
             @ValueSource(longs = { -1L, 4L })
             void indexIsInvalid_ThrowsGuardViolationExceptionWithExpectedMessage(final long index) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(longs = { 0L, 1L, 2L, 3L })
             void indexIsValid_NoExceptionIsThrown(final long index) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstInvalidIndex(index, 4, FAILURE_MESSAGE));
             }
         }
     }
@@ -602,7 +617,7 @@ class GuardTests {
             @ValueSource(strings = { "-0.2", "-0.4", "-0.6" })
             void valueIsLessThanZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value)));
             }
 
             @ParameterizedTest
@@ -619,15 +634,15 @@ class GuardTests {
             @ValueSource(strings = { "-0.2", "-0.4", "-0.6" })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedmessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0.0", "0.2", "0.4" })
             void valueIsNotLessThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigDecimal(value), FAILURE_MESSAGE));
             }
         }
 
@@ -638,7 +653,7 @@ class GuardTests {
             @ValueSource(strings = { "-1", "-2", "-3" })
             void valueIsLessThanZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value)));
             }
 
             @ParameterizedTest
@@ -655,15 +670,15 @@ class GuardTests {
             @ValueSource(strings = { "-1", "-2", "-3" })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0", "1", "2" })
             void valueIsNotLessThanZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstLessThanZero(new BigInteger(value), FAILURE_MESSAGE));
             }
         }
 
@@ -674,7 +689,7 @@ class GuardTests {
             @ValueSource(bytes = { -1, -2, -3 })
             void valueIsLessThanZero_ThrowsGuardViolationException(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -691,8 +706,7 @@ class GuardTests {
             @ValueSource(bytes = { -1, -2, -3 })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -709,7 +723,7 @@ class GuardTests {
             @ValueSource(doubles = { -01d, -0.01d, -0.001d })
             void valueIsLessThanZero_THrowsGuardViolationException(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -726,8 +740,7 @@ class GuardTests {
             @ValueSource(doubles = { -0.1d, -0.01d, -0.001d })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -744,7 +757,7 @@ class GuardTests {
             @ValueSource(floats = { -01f, -0.01f, -0.001f })
             void valueIsLessThanZero_ThrowsGuardViolationException(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -761,8 +774,7 @@ class GuardTests {
             @ValueSource(floats = { -0.1f, -0.01f, -0.001f })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -779,7 +791,7 @@ class GuardTests {
             @ValueSource(ints = { -1, -2, -3 })
             void valueIsLessThanZero_ThrowsGuardViolationException(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -796,8 +808,7 @@ class GuardTests {
             @ValueSource(ints = { -1, -2, -3 })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -814,7 +825,7 @@ class GuardTests {
             @ValueSource(longs = { -1L, -2L, -3L })
             void valueIsLessThanZero_ThrowsGuardViolationException(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -831,8 +842,7 @@ class GuardTests {
             @ValueSource(longs = { -1L, -2L, -3L })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -849,7 +859,7 @@ class GuardTests {
             @ValueSource(shorts = { -1, -2, -3 })
             void valueIsLessThanZero_THrowsGuardViolationException(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value));
+                    .isThrownBy(() -> Guard.againstLessThanZero(value));
             }
 
             @ParameterizedTest
@@ -866,8 +876,7 @@ class GuardTests {
             @ValueSource(shorts = { -1, -2, -3 })
             void valueIsLessThanZero_ThrowsGuardViolationExceptionWithExpectedMessage(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstLessThanZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -892,9 +901,9 @@ class GuardTests {
             @Test
             void collectionIsNotEmpty_ThrowsGuardViolationException() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonEmpty(list));
+                    .isThrownBy(() -> Guard.againstNonEmpty(list));
             }
         }
 
@@ -904,9 +913,9 @@ class GuardTests {
             @Test
             void collectionIsNotEmpty_THrowsGuardViolationExceptionWithExpectedMessage() {
                 final var list = new ArrayList<String>();
-                list.add("test");
+                list.add(LIST_TEST_ENTRY);
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonEmpty(list, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonEmpty(list, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -921,7 +930,7 @@ class GuardTests {
             @Test
             void arrayIsNonEmpty_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonEmpty(new String[1]));
+                    .isThrownBy(() -> Guard.againstNonEmpty(new String[1]));
             }
         }
 
@@ -931,14 +940,14 @@ class GuardTests {
             @Test
             void arrayisEmpty_NoExceptionIsThrown() {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstNonEmpty(new String[0], FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstNonEmpty(new String[0], FAILURE_MESSAGE));
             }
 
             @Test
             void arrayIsNonEmpty_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonEmpty(new String[1], FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonEmpty(new String[1], FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
         }
     }
@@ -953,7 +962,7 @@ class GuardTests {
             @EmptySource
             void valueIsNonNull_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonNull(value));
+                    .isThrownBy(() -> Guard.againstNonNull(value));
             }
 
             @ParameterizedTest
@@ -970,7 +979,7 @@ class GuardTests {
             @EmptySource
             void valueIsNonNull_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonNull(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonNull(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -991,7 +1000,7 @@ class GuardTests {
             @ValueSource(strings = { "-0.4", "-0.2", "0.2", "0.4" })
             void valueIsNonZero_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstNonZero(new BigDecimal(value)));
             }
 
             @Test
@@ -1007,14 +1016,14 @@ class GuardTests {
             @ValueSource(strings = { "-0.4", "-0.2", "0.2", "0.4" })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(new BigDecimal(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(new BigDecimal(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @Test
             void valueIsZero_NoExceptionIsThrown() {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstNonZero(BigDecimal.ZERO, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstNonZero(BigDecimal.ZERO, FAILURE_MESSAGE));
             }
         }
 
@@ -1025,7 +1034,7 @@ class GuardTests {
             @ValueSource(strings = { "-2", "-1", "1", "2" })
             void valueIsNonZero_THrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstNonZero(new BigInteger(value)));
             }
 
             @Test
@@ -1041,14 +1050,14 @@ class GuardTests {
             @ValueSource(strings = { "-2", "-1", "1", "2" })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(new BigInteger(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(new BigInteger(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
 
             @Test
             void valueIsZero_NoExceptionIsThrown() {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstNonZero(BigInteger.ZERO, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstNonZero(BigInteger.ZERO, FAILURE_MESSAGE));
             }
         }
 
@@ -1059,7 +1068,7 @@ class GuardTests {
             @ValueSource(bytes = { -2, -1, 1, 2 })
             void valueIsNonZero_THrowsGuardViolationException(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
@@ -1075,7 +1084,7 @@ class GuardTests {
             @ValueSource(bytes = { -2, -1, 1, 2 })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedMessage(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1091,11 +1100,11 @@ class GuardTests {
             @ValueSource(doubles = { -0.01, -0.1, 0.1, 0.01 })
             void valueIsNonZero_ThrowsGuardViolationException(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
-            void vlaueIsZero_NoExceptionIsThrown() {
+            void valueIsZero_NoExceptionIsThrown() {
                 Assertions.assertThatNoException().isThrownBy(() -> Guard.againstNonZero(0.0d));
             }
         }
@@ -1107,7 +1116,7 @@ class GuardTests {
             @ValueSource(doubles = { -0.01, -0.1, 0.1, 0.01 })
             void valueIsNonZero_THrowsGuardViolationExceptionWithExpectedMessage(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1123,7 +1132,7 @@ class GuardTests {
             @ValueSource(floats = { -0.01f, -0.1f, 0.1f, 0.01f })
             void valueIsNonZero_ThrowsGuardViolationException(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
@@ -1139,7 +1148,7 @@ class GuardTests {
             @ValueSource(floats = { -0.01f, -0.1f, 0.1f, 0.01f })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedmessage(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1155,7 +1164,7 @@ class GuardTests {
             @ValueSource(ints = { -2, -1, 1, 2 })
             void valueIsNonZero_THrowsGuardViolationException(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
@@ -1171,7 +1180,7 @@ class GuardTests {
             @ValueSource(ints = { -2, -1, 1, 2 })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedMessage(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1187,7 +1196,7 @@ class GuardTests {
             @ValueSource(longs = { -2L, -1L, 1L, 2L })
             void valueIsNonZero_ThrowsGuardViolationException(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
@@ -1203,7 +1212,7 @@ class GuardTests {
             @ValueSource(longs = { -2L, -1L, 1L, 2L })
             void valueIsNonZero_ThrowsGuradViolationExceptionWithExpectedMessage(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1219,7 +1228,7 @@ class GuardTests {
             @ValueSource(shorts = { -2, -1, 1, 2 })
             void valueIsNonZero_ThrowsGuardViolationException(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value));
+                    .isThrownBy(() -> Guard.againstNonZero(value));
             }
 
             @Test
@@ -1235,7 +1244,7 @@ class GuardTests {
             @ValueSource(shorts = { -2, -1, 1, 2 })
             void valueIsNonZero_ThrowsGuardViolationExceptionWithExpectedMessage(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNonZero(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1261,7 +1270,7 @@ class GuardTests {
             @NullSource
             void valueIsNull_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNull(value));
+                    .isThrownBy(() -> Guard.againstNull(value));
             }
         }
 
@@ -1278,7 +1287,7 @@ class GuardTests {
             @NullSource
             void valueIsNull_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstNull(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstNull(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
     }
@@ -1297,7 +1306,7 @@ class GuardTests {
             @Test
             void epressionIsTrue_ThrowsGuardViolationEception() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstTrue(true));
+                    .isThrownBy(() -> Guard.againstTrue(true));
             }
         }
 
@@ -1307,7 +1316,7 @@ class GuardTests {
             @Test
             void epressionIsTrue_ThrowsGuardViolationEceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstTrue(true, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstTrue(true, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @Test
@@ -1332,7 +1341,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(BigDecimal.ZERO));
+                    .isThrownBy(() -> Guard.againstZero(BigDecimal.ZERO));
             }
         }
 
@@ -1343,14 +1352,13 @@ class GuardTests {
             @ValueSource(strings = { "-0.4", "-0.2", "0.2", "0.4" })
             void valueIsNonZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZero(new BigDecimal(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZero(new BigDecimal(value), FAILURE_MESSAGE));
             }
 
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(BigDecimal.ZERO, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(BigDecimal.ZERO, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1366,7 +1374,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(BigInteger.ZERO));
+                    .isThrownBy(() -> Guard.againstZero(BigInteger.ZERO));
             }
         }
 
@@ -1377,14 +1385,13 @@ class GuardTests {
             @ValueSource(strings = { "-2", "-1", "1", "2" })
             void valueIsNonZero_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZero(new BigInteger(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZero(new BigInteger(value), FAILURE_MESSAGE));
             }
 
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(BigInteger.ZERO, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(BigInteger.ZERO, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1400,7 +1407,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero((byte) 0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero((byte) 0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1416,7 +1423,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero((byte) 0));
+                    .isThrownBy(() -> Guard.againstZero((byte) 0));
             }
         }
 
@@ -1432,7 +1439,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0.0d));
+                    .isThrownBy(() -> Guard.againstZero(0.0d));
             }
         }
 
@@ -1448,7 +1455,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0.d, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(0.d, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1464,7 +1471,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0.0f));
+                    .isThrownBy(() -> Guard.againstZero(0.0f));
             }
         }
 
@@ -1480,7 +1487,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0.0f, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(0.0f, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1496,7 +1503,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0));
+                    .isThrownBy(() -> Guard.againstZero(0));
             }
         }
 
@@ -1512,7 +1519,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1528,7 +1535,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0L));
+                    .isThrownBy(() -> Guard.againstZero(0L));
             }
         }
 
@@ -1544,7 +1551,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMesage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero(0L, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero(0L, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1560,7 +1567,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationException() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero((short) 0));
+                    .isThrownBy(() -> Guard.againstZero((short) 0));
             }
         }
 
@@ -1576,7 +1583,7 @@ class GuardTests {
             @Test
             void valueIsZero_ThrowsGuardViolationExceptionWithExpectedMessage() {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZero((short) 0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZero((short) 0, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
     }
@@ -1597,7 +1604,7 @@ class GuardTests {
             @ValueSource(strings = { "0.0", "0.2", "0.4" })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value)));
             }
         }
 
@@ -1608,15 +1615,15 @@ class GuardTests {
             @ValueSource(strings = { "-0.2", "-0.4", "-0.6" })
             void valueIsNotZeroOrGreater_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value), FAILURE_MESSAGE));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0.0", "0.2", "0.4" })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigDecimal(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1633,7 +1640,7 @@ class GuardTests {
             @ValueSource(strings = { "0", "1", "2" })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value)));
             }
         }
 
@@ -1644,15 +1651,15 @@ class GuardTests {
             @ValueSource(strings = { "-1", "-2", "-3" })
             void valueIsNotZeroOrGreater_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value), FAILURE_MESSAGE));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0", "1", "2" })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(new BigInteger(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1669,7 +1676,7 @@ class GuardTests {
             @ValueSource(bytes = { 0, 1, 2 })
             void valueIsZeroOrGreater_THrowsGGuardViolationException(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1686,8 +1693,7 @@ class GuardTests {
             @ValueSource(bytes = { 0, 1, 2 })
             void valueIsZeroOrGreater_THrowsGGuardViolationExceptionWithExpectedMessage(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1704,7 +1710,7 @@ class GuardTests {
             @ValueSource(doubles = { 0.0d, 0.1d, 0.01d })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1721,8 +1727,7 @@ class GuardTests {
             @ValueSource(doubles = { 0.0d, 0.1d, 0.01d })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1739,7 +1744,7 @@ class GuardTests {
             @ValueSource(floats = { 0.0f, 0.1f, 0.01f })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1756,8 +1761,7 @@ class GuardTests {
             @ValueSource(floats = { 0.0f, 0.1f, 0.01f })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1771,10 +1775,10 @@ class GuardTests {
             }
 
             @ParameterizedTest
-            @ValueSource(ints = { 0, 1, 2, })
+            @ValueSource(ints = { 0, 1, 2 })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1791,8 +1795,7 @@ class GuardTests {
             @ValueSource(ints = { 0, 1, 2 })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedmessage(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1809,7 +1812,7 @@ class GuardTests {
             @ValueSource(longs = { 0L, 1L, 2L })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1826,8 +1829,7 @@ class GuardTests {
             @ValueSource(longs = { 0L, 1L, 2L })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1844,7 +1846,7 @@ class GuardTests {
             @ValueSource(shorts = { 0, 1, 2 })
             void valueIsZeroOrGreater_ThrowsGuardViolationException(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value));
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value));
             }
         }
 
@@ -1861,8 +1863,7 @@ class GuardTests {
             @ValueSource(shorts = { 0, 1, 2 })
             void valueIsZeroOrGreater_ThrowsGuardViolationExceptionWithExpectedMessage(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrGreater(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
     }
@@ -1883,7 +1884,7 @@ class GuardTests {
             @ValueSource(strings = { "0.0", "-0.2", "-0.4" })
             void valueIsZeroOrLess_THrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value)));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value)));
             }
         }
 
@@ -1894,15 +1895,15 @@ class GuardTests {
             @ValueSource(strings = { "0.2", "0.4", "0.6" })
             void valueIsZeroOrLess_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value), FAILURE_MESSAGE));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0.0", "-0.2", "-0.4" })
-            void valueIsZeroOrLess_THrowsGuardViolationExceptionWithExpectedMessage(final String value) {
+            void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigDecimal(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1919,7 +1920,7 @@ class GuardTests {
             @ValueSource(strings = { "0", "-1", "-2" })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value)));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value)));
             }
         }
 
@@ -1930,15 +1931,15 @@ class GuardTests {
             @ValueSource(strings = { "1", "2", "3" })
             void valueIsNotZeroOrLess_NoExceptionIsThrown(final String value) {
                 Assertions.assertThatNoException()
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value), FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value), FAILURE_MESSAGE));
             }
 
             @ParameterizedTest
             @ValueSource(strings = { "0", "-1", "-2" })
             void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final String value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value), FAILURE_MESSAGE))
-                        .withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(new BigInteger(value), FAILURE_MESSAGE))
+                    .withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1955,7 +1956,7 @@ class GuardTests {
             @ValueSource(bytes = { 0, -1, -2 })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -1972,7 +1973,7 @@ class GuardTests {
             @ValueSource(bytes = { 0, -1, -2 })
             void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final byte value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -1989,7 +1990,7 @@ class GuardTests {
             @ValueSource(doubles = { 0.0d, -0.1d, -0.01d })
             void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -2006,7 +2007,7 @@ class GuardTests {
             @ValueSource(doubles = { 0.0d, -0.1d, -0.01d })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final double value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -2023,7 +2024,7 @@ class GuardTests {
             @ValueSource(floats = { 0.0f, -0.1f, -0.01f })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -2038,9 +2039,9 @@ class GuardTests {
 
             @ParameterizedTest
             @ValueSource(floats = { 0.0f, -0.1f, -0.01f })
-            void valueIsZeroOrLess_ThrowsGuardViolationExcpetionWithExpectedMessage(final float value) {
+            void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final float value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -2057,7 +2058,7 @@ class GuardTests {
             @ValueSource(ints = { 0, -1, -2 })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -2068,7 +2069,7 @@ class GuardTests {
             @ValueSource(ints = { 0, -1, -2 })
             void value_IsZeroOrLess_ThrowsGuradViolationExceptionWithExpectedMessage(final int value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
 
             @ParameterizedTest
@@ -2091,7 +2092,7 @@ class GuardTests {
             @ValueSource(longs = { 0L, -1L, -2L })
             void valueIsZeroOrLess_ThrowsGuardViolationException(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -2108,7 +2109,7 @@ class GuardTests {
             @ValueSource(longs = { 0L, -1L, -2L })
             void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final long value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE)).withMessage(FAILURE_MESSAGE);
             }
         }
 
@@ -2125,7 +2126,7 @@ class GuardTests {
             @ValueSource(shorts = { 0, -1, -2 })
             void valueIsZeroOrLess_THrowsGuardViolationException(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value));
             }
         }
 
@@ -2142,25 +2143,8 @@ class GuardTests {
             @ValueSource(shorts = { 0, -1, -2 })
             void valueIsZeroOrLess_ThrowsGuardViolationExceptionWithExpectedMessage(final short value) {
                 Assertions.assertThatExceptionOfType(GuardViolationException.class)
-                        .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE));
+                    .isThrownBy(() -> Guard.againstZeroOrLess(value, FAILURE_MESSAGE));
             }
         }
-    }
-
-    private static final String FAILURE_MESSAGE = "Guard failed.";
-
-    @Test
-    void IsUtilityClass() {
-        for (final var method : Guard.class.getDeclaredMethods()) {
-            final var modifiers = method.getModifiers();
-            Assertions.assertThat(Modifier.isStatic(modifiers)).isTrue();
-        }
-        final var constructors = Guard.class.getDeclaredConstructors();
-        Assertions.assertThat(constructors).hasSize(1);
-        final var constructor = constructors[0];
-        final var modifiers = constructor.getModifiers();
-        Assertions.assertThat(Modifier.isPrivate(modifiers)).isTrue();
-        constructor.setAccessible(true);
-        Assertions.assertThatNoException().isThrownBy(() -> constructor.newInstance());
     }
 }
