@@ -23,65 +23,24 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.iterator;
+package io.github.tresty.collections.list;
 
-import io.github.tresty.collections.iterator.SequencedIterator;
+import io.github.tresty.collections.iterator.ListIterator;
 
-/**
- * The Class ReverseSequencedIterator.
- *
- * @param <E> the element type
- */
-public final class ReverseSequencedIterator<E> implements SequencedIterator<E> {
+public final class ImmutableArrayList<E> extends AbstractArrayList<E> implements ImmutableList<E> {
 
-    private SequencedIterator<E> sequencedIterator;
-
-    /**
-     * Instantiates a new reverse sequenced iterator.
-     *
-     * @param iterator the iterator
-     */
-    public ReverseSequencedIterator(final SequencedIterator<E> iterator) {
-        this.sequencedIterator = iterator;
+    @Override
+    public ListIterator<E> descendingIterator() {
+        return new ArrayListIterator<>(this, 0);
     }
 
-    /**
-     * Checks for next.
-     *
-     * @return true, if successful
-     */
     @Override
-    public boolean hasNext() {
-        return sequencedIterator.hasPrevious();
+    public ListIterator<E> iterator() {
+        return new ArrayListIterator<E>(this, 0);
     }
 
-    /**
-     * Checks for previous.
-     *
-     * @return true, if successful
-     */
     @Override
-    public boolean hasPrevious() {
-        return sequencedIterator.hasNext();
-    }
-
-    /**
-     * Next.
-     *
-     * @return the e
-     */
-    @Override
-    public E next() {
-        return sequencedIterator.previous();
-    }
-
-    /**
-     * Previous.
-     *
-     * @return the e
-     */
-    @Override
-    public E previous() {
-        return sequencedIterator.next();
+    public ListIterator<E> iterator(final int index) {
+        return new ArrayListIterator<E>(this, index);
     }
 }

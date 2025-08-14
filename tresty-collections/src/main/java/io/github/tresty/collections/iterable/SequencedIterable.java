@@ -34,6 +34,8 @@ import io.github.tresty.collections.iterator.SequencedIterator;
  */
 public interface SequencedIterable<E> extends Iterable<E> {
 
+    SequencedIterator<E> descendingIterator();
+    
     /**
      * Iterator.
      *

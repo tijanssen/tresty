@@ -26,7 +26,6 @@
 package io.github.tresty.collections.list;
 
 import io.github.tresty.collections.collection.MutableSequencedCollection;
-import io.github.tresty.collections.internal.view.ReverseMutableListView;
 import io.github.tresty.collections.iterable.MutableListIterable;
 
 /**
@@ -35,6 +34,10 @@ import io.github.tresty.collections.iterable.MutableListIterable;
  * @param <E> the element type
  */
 public interface MutableList<E> extends MutableSequencedCollection<E>, List<E>, MutableListIterable<E> {
+
+    void insert(int index, E e);
+
+    void remove(int index);
 
     /**
      * Reversed.
@@ -45,4 +48,6 @@ public interface MutableList<E> extends MutableSequencedCollection<E>, List<E>, 
     default MutableList<E> reversed() {
         return ReverseMutableListView.of(this);
     }
+
+    void set(int index, E e);
 }

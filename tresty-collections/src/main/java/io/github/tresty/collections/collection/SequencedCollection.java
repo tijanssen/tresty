@@ -25,7 +25,6 @@
  */
 package io.github.tresty.collections.collection;
 
-import io.github.tresty.collections.internal.view.ReverseSequencedCollectionView;
 import io.github.tresty.collections.iterable.SequencedIterable;
 import java.util.Optional;
 

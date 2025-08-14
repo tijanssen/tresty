@@ -192,7 +192,6 @@
 						</mutators>
 						<outputFormats>HTML,XML</outputFormats>
 						<verbosity>QUIET</verbosity>
-						<withHistory>true</withHistory>
 					</configuration>
 					<executions>
 						<execution>

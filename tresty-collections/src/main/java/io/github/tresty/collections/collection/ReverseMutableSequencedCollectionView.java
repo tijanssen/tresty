@@ -23,32 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.view;
+package io.github.tresty.collections.collection;
 
-import io.github.tresty.collections.collection.Collection;
-import io.github.tresty.collections.collection.MutableSequencedCollection;
-import io.github.tresty.collections.internal.iterator.ReverseMutableSequencedIterator;
 import io.github.tresty.collections.iterator.MutableSequencedIterator;
 import io.github.tresty.common.Guard;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-/**
- * The Class ReverseMutableSequencedCollectionView.
- *
- * @param <E> the element type
- */
-public final class ReverseMutableSequencedCollectionView<E> implements MutableSequencedCollection<E> {
+final class ReverseMutableSequencedCollectionView<E> implements MutableSequencedCollection<E> {
 
-    private MutableSequencedCollection<E> mutableSequencedCollection;
+    private MutableSequencedCollection<E> collection;
 
     /**
      * Instantiates a new reverse mutable sequenced collection view.
      *
      * @param collection the collection
      */
-    public ReverseMutableSequencedCollectionView(final MutableSequencedCollection<E> mutableSequencedCollection) {
-        this.mutableSequencedCollection = mutableSequencedCollection;
+    ReverseMutableSequencedCollectionView(final MutableSequencedCollection<E> collection) {
+        this.collection = collection;
     }
 
     /**
@@ -59,8 +50,9 @@ public final class ReverseMutableSequencedCollectionView<E> implements MutableSe
      * @return the mutable sequenced collection
      */
     public static <E> MutableSequencedCollection<E> of(final MutableSequencedCollection<E> collection) {
+        Guard.againstNull(collection);
         if (collection instanceof ReverseMutableSequencedCollectionView<E> c) {
-            return c.mutableSequencedCollection;
+            return c.collection;
         } else {
             return new ReverseMutableSequencedCollectionView<>(collection);
         }
@@ -68,109 +60,61 @@ public final class ReverseMutableSequencedCollectionView<E> implements MutableSe
 
     @Override
     public void add(final Collection<? extends E> c) {
+        collection.add(c);
     }
 
-    /**
-     * Adds the.
-     *
-     * @param e the e
-     */
+    @Override
     public void add(final E e) {
-        Guard.againstNull(e);
-        mutableSequencedCollection.add(e);
+        collection.add(e);
     }
 
     @Override
     public void add(final java.util.Collection<? extends E> c) {
+        collection.add(c);
     }
 
     @Override
-    public void addFirst(final Collection<? extends E> c) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * Adds the first.
-     *
-     * @param e the e
-     */
     public void addFirst(final E e) {
-        Guard.againstNull(e);
-        mutableSequencedCollection.addLast(e);
+        collection.addLast(e);
     }
 
     @Override
-    public void addFirst(final java.util.Collection<? extends E> c) {
-        // TODO Auto-generated method stub
-
-    }
-
-    /**
-     * Adds the last.
-     *
-     * @param e the e
-     */
     public void addLast(final E e) {
-        mutableSequencedCollection.addFirst(e);
-        Guard.againstNull(e);
+        collection.addFirst(e);
     }
 
-    /**
-     * Gets the first.
-     *
-     * @return the first
-     */
+    @Override
+    public MutableSequencedIterator<E> descendingIterator() {
+        return null;
+    }
+
     @Override
     public Optional<E> getFirst() {
-        return mutableSequencedCollection.getLast();
+        return collection.getLast();
     }
 
-    /**
-     * Gets the last.
-     *
-     * @return the last
-     */
     @Override
     public Optional<E> getLast() {
-        return mutableSequencedCollection.getFirst();
+        return collection.getFirst();
     }
 
-    /**
-     * Iterator.
-     *
-     * @return the mutable sequenced iterator
-     */
     @Override
     public MutableSequencedIterator<E> iterator() {
-        return new ReverseMutableSequencedIterator<>(mutableSequencedCollection.iterator());
+        return null;
     }
 
     @Override
     public void removeFirst() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeIf(final Predicate<? super Object> predicate) {
-        // TODO Auto-generated method stub
-
+        collection.removeLast();
     }
 
     @Override
     public void removeLast() {
-        // TODO Auto-generated method stub
-
+        collection.removeFirst();
     }
 
-    /**
-     * Size.
-     *
-     * @return the int
-     */
     @Override
     public int size() {
-        return mutableSequencedCollection.size();
+        return collection.size();
     }
 }

@@ -28,15 +28,14 @@ package io.github.tresty.collections.collection;
 import io.github.tresty.collections.iterator.MutableSequencedIterator;
 import io.github.tresty.common.Guard;
 import java.util.Optional;
-import org.jspecify.annotations.Nullable;
 
 public final class LinkedList<E> implements MutableSequencedCollection<E> {
 
-    private final Node<E> root;
-    private int size;
+    final LinkedListNode<E> root;
+    int size;
 
     public LinkedList() {
-        root = new Node<>(null);
+        root = new LinkedListNode<>(null);
         root.next = root;
         root.previous = root;
     }
@@ -46,53 +45,125 @@ public final class LinkedList<E> implements MutableSequencedCollection<E> {
         Guard.againstNull(c);
         for (final var element : c) {
             final var last = root.previous;
-            final var newNode = new Node<>(element);
-            last.next = newNode;
-            newNode.previous = last;
-            newNode.next = root;
-            root.previous = newNode;
+            final var node = new LinkedListNode<>(element);
+            last.next = node;
+            node.previous = last;
+            node.next = root;
+            root.previous = node;
+        }
+        size = c.size();
+    }
+
+    @SafeVarargs
+    public LinkedList(final E... elements) {
+        this();
+        Guard.againstNull(elements);
+        Guard.againstContainsNull(elements);
+        for (final var e : elements) {
+            final var node = new LinkedListNode<>(e);
+            final var last = root.previous;
+            last.next = node;
+            node.previous = last;
+            node.next = root;
+            root.previous = node;
+        }
+        size = elements.length;
+    }
+
+    public LinkedList(final java.util.Collection<? extends E> c) {
+        this();
+        Guard.againstNull(c);
+        Guard.againstContainsNull(c);
+        for (final var element : c) {
+            final var last = root.previous;
+            final var node = new LinkedListNode<>(element);
+            last.next = node;
+            node.previous = last;
+            node.next = root;
+            root.previous = node;
         }
         size = c.size();
     }
 
     @Override
-    public void addFirst(final Collection<? extends E> c) {
-        // TODO Auto-generated method stub
+    public void add(final Collection<? extends E> c) {
+        Guard.againstNull(c);
+        for (final var e : c) {
+            final var node = new LinkedListNode<>(e);
+            final var previous = root.previous;
+            previous.next = node;
+            node.previous = previous;
+            node.next = root;
+            root.previous = node;
+            size++;
+        }
+    }
 
+    @Override
+    public void add(final java.util.Collection<? extends E> c) {
+        Guard.againstNull(c);
+        Guard.againstContainsNull(c);
+        for (final var e : c) {
+            final var node = new LinkedListNode<>(e);
+            final var previous = root.previous;
+            previous.next = node;
+            node.previous = previous;
+            node.next = root;
+            root.previous = node;
+            size++;
+        }
     }
 
     @Override
     public void addFirst(final E e) {
-    }
-
-    @Override
-    public void addFirst(final java.util.Collection<? extends E> c) {
-        // TODO Auto-generated method stub
-
+        Guard.againstNull(e);
+        final var node = new LinkedListNode<>(e);
+        final var next = root.next;
+        root.next = node;
+        node.previous = root;
+        node.next = next;
+        next.previous = node;
+        size++;
     }
 
     @Override
     public void addLast(final E e) {
+        Guard.againstNull(e);
+        final var node = new LinkedListNode<>(e);
+        final var previous = root.previous;
+        previous.next = node;
+        node.previous = previous;
+        node.next = root;
+        root.previous = node;
+        size++;
+    }
+
+    @Override
+    public MutableSequencedIterator<E> descendingIterator() {
+        return new LinkedListIterator<E>(this, true);
     }
 
     @Override
     public Optional<E> getFirst() {
-        return Optional.of(root.next.value);
+        return Optional.ofNullable(root.next.value);
     }
 
     @Override
     public Optional<E> getLast() {
-        return Optional.of(root.previous.value);
+        return Optional.ofNullable(root.previous.value);
     }
 
     @Override
     public MutableSequencedIterator<E> iterator() {
-        return null;
+        return new LinkedListIterator<E>(this, false);
     }
 
     @Override
     public void removeFirst() {
         Guard.againstZero(size);
+        if (size == 0) {
+            return;
+        }
         final var first = root.next;
         final var newFirst = root.next.next;
         newFirst.previous = root;
@@ -106,6 +177,9 @@ public final class LinkedList<E> implements MutableSequencedCollection<E> {
     @Override
     public void removeLast() {
         Guard.againstZero(size);
+        if (size == 0) {
+            return;
+        }
         final var last = root.previous;
         final var newLast = root.previous.previous;
         newLast.next = root;
@@ -119,17 +193,5 @@ public final class LinkedList<E> implements MutableSequencedCollection<E> {
     @Override
     public int size() {
         return size;
-    }
-
-    @SuppressWarnings("checkstyle:VisibilityModifier")
-    private static final class Node<E> {
-
-        public Node<E> next;
-        public Node<E> previous;
-        public E value;
-
-        Node(final @Nullable E value) {
-            this.value = value;
-        }
     }
 }

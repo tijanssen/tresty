@@ -23,32 +23,23 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.view;
+package io.github.tresty.collections.list;
 
 import io.github.tresty.collections.collection.Collection;
-import io.github.tresty.collections.internal.iterator.ReverseMutableListIterator;
 import io.github.tresty.collections.iterator.MutableListIterator;
-import io.github.tresty.collections.list.MutableList;
-import io.github.tresty.common.Guard;
 import java.util.Optional;
-import java.util.function.Predicate;
 
-/**
- * The Class ReverseMutableListView.
- *
- * @param <E> the element type
- */
-public final class ReverseMutableListView<E> implements MutableList<E> {
+final class ReverseMutableListView<E> implements MutableList<E> {
 
-    private final MutableList<E> mutableList;
+    private final MutableList<E> list;
 
     /**
      * Instantiates a new reverse mutable list view.
      *
      * @param list the list
      */
-    public ReverseMutableListView(final MutableList<E> mutableList) {
-        this.mutableList = mutableList;
+    ReverseMutableListView(final MutableList<E> list) {
+        this.list = list;
     }
 
     /**
@@ -60,7 +51,7 @@ public final class ReverseMutableListView<E> implements MutableList<E> {
      */
     public static <E> MutableList<E> of(final MutableList<E> list) {
         if (list instanceof ReverseMutableListView<E> l) {
-            return l.mutableList;
+            return l.list;
         } else {
             return new ReverseMutableListView<>(list);
         }
@@ -68,16 +59,13 @@ public final class ReverseMutableListView<E> implements MutableList<E> {
 
     @Override
     public void add(final Collection<? extends E> c) {
+        list.add(c);
     }
 
-    /**
-     * Adds the.
-     *
-     * @param e the e
-     */
+    @Override
     public void add(final E e) {
-        Guard.againstNull(e);
-        mutableList.add(e);
+        // TODO Auto-generated method stub
+        MutableList.super.add(e);
     }
 
     @Override
@@ -85,87 +73,66 @@ public final class ReverseMutableListView<E> implements MutableList<E> {
     }
 
     @Override
-    public void addFirst(final Collection<? extends E> c) {
+    public void addFirst(final E e) {
         // TODO Auto-generated method stub
 
-    }
-
-    /**
-     * Adds the first.
-     *
-     * @param e the e
-     */
-    public void addFirst(final E e) {
-        Guard.againstNull(e);
-        mutableList.addLast(e);
     }
 
     @Override
-    public void addFirst(final java.util.Collection<? extends E> c) {
+    public void addLast(final E e) {
         // TODO Auto-generated method stub
 
     }
 
-    /**
-     * Adds the last.
-     *
-     * @param e the e
-     */
-    public void addLast(final E e) {
-        Guard.againstNull(e);
-        mutableList.addFirst(e);
+    @Override
+    public MutableListIterator<E> descendingIterator() {
+        return null;
     }
 
-    /**
-     * Gets the.
-     *
-     * @param index the index
-     * @return the e
-     */
     @Override
     public E get(final int index) {
-        final var reverseIndex = mutableList.size() - index - 1;
-        return mutableList.get(reverseIndex);
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    /**
-     * Gets the first.
-     *
-     * @return the first
-     */
     @Override
     public Optional<E> getFirst() {
-        return mutableList.getLast();
+        // TODO Auto-generated method stub
+        return Optional.empty();
     }
 
-    /**
-     * Gets the last.
-     *
-     * @return the last
-     */
     @Override
     public Optional<E> getLast() {
-        return mutableList.getFirst();
+        // TODO Auto-generated method stub
+        return Optional.empty();
     }
 
-    /**
-     * Iterator.
-     *
-     * @return the mutable list iterator
-     */
+    @Override
+    public void insert(final int index, final E e) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public MutableListIterator<E> iterator() {
-        return new ReverseMutableListIterator<>(mutableList.iterator());
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public MutableListIterator<E> iterator(final int index) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void remove(final int index) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
     public void removeFirst() {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
-    public void removeIf(final Predicate<? super Object> predicate) {
         // TODO Auto-generated method stub
 
     }
@@ -176,13 +143,15 @@ public final class ReverseMutableListView<E> implements MutableList<E> {
 
     }
 
-    /**
-     * Size.
-     *
-     * @return the int
-     */
+    @Override
+    public void set(final int index, final E e) {
+        // TODO Auto-generated method stub
+
+    }
+
     @Override
     public int size() {
-        return mutableList.size();
+        // TODO Auto-generated method stub
+        return 0;
     }
 }

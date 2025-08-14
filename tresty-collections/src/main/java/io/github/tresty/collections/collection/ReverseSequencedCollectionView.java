@@ -23,95 +23,64 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.view;
+package io.github.tresty.collections.collection;
 
-import io.github.tresty.collections.internal.iterator.ReverseListIterator;
-import io.github.tresty.collections.iterator.ListIterator;
-import io.github.tresty.collections.list.List;
+import io.github.tresty.collections.iterator.SequencedIterator;
+import io.github.tresty.common.Guard;
 import java.util.Optional;
 
-/**
- * The Class ReverseListView.
- *
- * @param <E> the element type
- */
-public final class ReverseListView<E> implements List<E> {
+final class ReverseSequencedCollectionView<E> implements SequencedCollection<E> {
 
-    private final List<E> list;
+    private final SequencedCollection<E> collection;
 
     /**
-     * Instantiates a new reverse list view.
+     * Instantiates a new reverse sequenced collection view.
      *
-     * @param list the list
+     * @param collection the collection
      */
-    public ReverseListView(final List<E> list) {
-        this.list = list;
+    ReverseSequencedCollectionView(final SequencedCollection<E> collection) {
+        this.collection = collection;
     }
 
     /**
      * Of.
      *
      * @param <E> the element type
-     * @param list the list
-     * @return the list
+     * @param collection the collection
+     * @return the sequenced collection
      */
-    public static <E> List<E> of(final List<E> list) {
-        if (list instanceof ReverseListView<E> l) {
-            return l.list;
+    public static <E> SequencedCollection<E> of(final SequencedCollection<E> collection) {
+        Guard.againstNull(collection);
+        if (collection instanceof ReverseSequencedCollectionView<E> c) {
+            return c.collection;
         } else {
-            return new ReverseListView<>(list);
+            return new ReverseSequencedCollectionView<>(collection);
         }
     }
 
-    /**
-     * Gets the.
-     *
-     * @param index the index
-     * @return the e
-     */
     @Override
-    public E get(final int index) {
-        final var reverseIndex = list.size() - index - 1;
-        return list.get(reverseIndex);
+    public SequencedIterator<E> descendingIterator() {
+        // TODO Auto-generated method stub
+        return null;
     }
 
-    /**
-     * Gets the first.
-     *
-     * @return the first
-     */
     @Override
     public Optional<E> getFirst() {
-        return list.getLast();
+        return collection.getLast();
     }
 
-    /**
-     * Gets the last.
-     *
-     * @return the last
-     */
     @Override
     public Optional<E> getLast() {
-        return list.getFirst();
+        return collection.getFirst();
     }
 
-    /**
-     * Iterator.
-     *
-     * @return the list iterator
-     */
     @Override
-    public ListIterator<E> iterator() {
-        return new ReverseListIterator<>(list.iterator());
+    public SequencedIterator<E> iterator() {
+        return null;
     }
 
-    /**
-     * Size.
-     *
-     * @return the int
-     */
     @Override
     public int size() {
-        return list.size();
+        return collection.size();
     }
 }

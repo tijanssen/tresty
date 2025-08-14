@@ -23,65 +23,17 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.iterator;
+package io.github.tresty.collections.collection;
 
-import io.github.tresty.collections.iterator.ListIterator;
+import org.jspecify.annotations.Nullable;
 
-/**
- * The Class ReverseListIterator.
- *
- * @param <E> the element type
- */
-public final class ReverseListIterator<E> implements ListIterator<E> {
+final class LinkedListNode<E> {
 
-    private final ListIterator<E> iterator;
+    LinkedListNode<E> next;
+    LinkedListNode<E> previous;
+    E value;
 
-    /**
-     * Instantiates a new reverse list iterator.
-     *
-     * @param iterator the iterator
-     */
-    public ReverseListIterator(final ListIterator<E> iterator) {
-        this.iterator = iterator;
-    }
-
-    @Override
-    public boolean hasNext() {
-        return iterator.hasPrevious();
-    }
-
-    @Override
-    public boolean hasPrevious() {
-        return iterator.hasNext();
-    }
-
-    @Override
-    public E next() {
-        return iterator.previous();
-    }
-
-    /**
-     * Next index.
-     *
-     * @return the int
-     */
-    @Override
-    public int nextIndex() {
-        return iterator.previousIndex();
-    }
-
-    @Override
-    public E previous() {
-        return iterator.next();
-    }
-
-    /**
-     * Previous index.
-     *
-     * @return the int
-     */
-    @Override
-    public int previousIndex() {
-        return iterator.nextIndex();
+    LinkedListNode(final @Nullable E value) {
+        this.value = value;
     }
 }

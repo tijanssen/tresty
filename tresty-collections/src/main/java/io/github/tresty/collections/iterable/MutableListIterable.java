@@ -34,6 +34,8 @@ import io.github.tresty.collections.iterator.MutableListIterator;
  */
 public interface MutableListIterable<E> extends ListIterable<E> {
 
+    MutableListIterator<E> descendingIterator();
+
     /**
      * Iterator.
      *
@@ -41,4 +43,6 @@ public interface MutableListIterable<E> extends ListIterable<E> {
      */
     @Override
     MutableListIterator<E> iterator();
+
+    MutableListIterator<E> iterator(int index);
 }

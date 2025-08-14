@@ -26,6 +26,7 @@
 package io.github.tresty.collections.collection;
 
 import io.github.tresty.common.Guard;
+import java.lang.reflect.Array;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 
@@ -207,9 +208,22 @@ public interface Collection<E> extends Iterable<E> {
      *
      * @return the e[]
      */
-    default E[] toArray() {
-        @SuppressWarnings("unchecked")
-        final var array = (E[]) new Object[size()];
+    default Object[] toArray() {
+        final var array = new Object[size()];
+        var index = 0;
+        for (final var e : this) {
+            array[index] = e;
+            index++;
+        }
+        return array;
+    }
+
+    @SuppressWarnings("unchecked")
+    default E[] toArray(final E[] a) {
+        var array = a;
+        if (a.length < size()) {
+            array = (E[]) Array.newInstance(a.getClass(), size());
+        }
         var index = 0;
         for (final var e : this) {
             array[index] = e;

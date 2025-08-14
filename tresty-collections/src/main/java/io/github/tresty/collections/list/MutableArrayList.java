@@ -25,39 +25,30 @@
  */
 package io.github.tresty.collections.list;
 
+import io.github.tresty.collections.collection.Collection;
 import io.github.tresty.collections.iterator.MutableListIterator;
-import io.github.tresty.common.Guard;
-import java.util.Collection;
 import java.util.Optional;
 
-public final class MutableArrayList<E> implements MutableList<E> {
-
-    private static final int DEFAULT_INITIAL_CAPACITY = 20;
-
-    private E[] elementData;
-
-    private int size;
+public final class MutableArrayList<E> extends AbstractArrayList<E> implements MutableList<E> {
 
     public MutableArrayList() {
-        this(DEFAULT_INITIAL_CAPACITY);
+    }
+
+    public MutableArrayList(final Collection<? extends E> c) {
+        super(c);
     }
 
     @SafeVarargs
-    @SuppressWarnings("checkstyle:AvoidInlineConditionals")
     public MutableArrayList(final E... args) {
-        this(args.length < DEFAULT_INITIAL_CAPACITY ? DEFAULT_INITIAL_CAPACITY : args.length);
-        Guard.againstContainsNull(args);
-        System.arraycopy(args, 0, elementData, 0, args.length);
-        size = args.length;
+        super(args);
     }
 
-    @SuppressWarnings("unchecked")
     public MutableArrayList(final int initialCapacity) {
-        if (initialCapacity < DEFAULT_INITIAL_CAPACITY) {
-            elementData = (E[]) new Object[initialCapacity];
-        } else {
-            elementData = (E[]) new Object[DEFAULT_INITIAL_CAPACITY];
-        }
+        super(initialCapacity);
+    }
+
+    public MutableArrayList(final java.util.Collection<? extends E> c) {
+        super(c);
     }
 
     @Override
@@ -69,13 +60,7 @@ public final class MutableArrayList<E> implements MutableList<E> {
     }
 
     @Override
-    public void add(final io.github.tresty.collections.collection.Collection<? extends E> c) {
-    }
-
-    @Override
-    public void addFirst(final Collection<? extends E> c) {
-        // TODO Auto-generated method stub
-        
+    public void add(final java.util.Collection<? extends E> c) {
     }
 
     @Override
@@ -83,13 +68,12 @@ public final class MutableArrayList<E> implements MutableList<E> {
     }
 
     @Override
-    public void addFirst(final io.github.tresty.collections.collection.Collection<? extends E> c) {
-        // TODO Auto-generated method stub
-        
+    public void addLast(final E e) {
     }
 
     @Override
-    public void addLast(final E e) {
+    public MutableListIterator<E> descendingIterator() {
+        return new MutableArrayListIterator<>(this, 0);
     }
 
     @Override
@@ -108,8 +92,25 @@ public final class MutableArrayList<E> implements MutableList<E> {
     }
 
     @Override
+    public void insert(final int index, final E e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public MutableListIterator<E> iterator() {
-        return null;
+        return new MutableArrayListIterator<>(this, 0);
+    }
+
+    @Override
+    public MutableListIterator<E> iterator(final int index) {
+        return new MutableArrayListIterator<>(this, index);
+    }
+
+    @Override
+    public void remove(final int index) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override
@@ -118,6 +119,12 @@ public final class MutableArrayList<E> implements MutableList<E> {
 
     @Override
     public void removeLast() {
+    }
+
+    @Override
+    public void set(final int index, final E e) {
+        // TODO Auto-generated method stub
+
     }
 
     @Override

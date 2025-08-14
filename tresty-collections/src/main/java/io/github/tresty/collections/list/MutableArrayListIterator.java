@@ -23,85 +23,57 @@
  * THE SOFTWARE.
  * #L%
  */
-package io.github.tresty.collections.internal.iterator;
+package io.github.tresty.collections.list;
 
 import io.github.tresty.collections.iterator.MutableListIterator;
 
-/**
- * The Class ReverseMutableListIterator.
- *
- * @param <E> the element type
- */
-public final class ReverseMutableListIterator<E> implements MutableListIterator<E> {
+final class MutableArrayListIterator<E> extends ArrayListIterator<E> implements MutableListIterator<E> {
 
-    private final MutableListIterator<E> iterator;
+    private final MutableArrayList<E> mutableList;
 
-    /**
-     * Instantiates a new reverse mutable list iterator.
-     *
-     * @param iterator the iterator
-     */
-    public ReverseMutableListIterator(final MutableListIterator<E> iterator) {
-        this.iterator = iterator;
+    MutableArrayListIterator(final MutableArrayList<E> mutableList, final int index) {
+        super(mutableList, index);
+        this.mutableList = mutableList;
     }
 
     @Override
     public void addAfter(final E e) {
-        iterator.addBefore(e);
+        if (lastRet < 0) {
+            throw new IllegalStateException();
+        }
+        mutableList.insert(lastRet + 1, e);
+        lastRet = -1;
+        nextIndex++;
+        previousIndex++;
     }
 
     @Override
     public void addBefore(final E e) {
-        iterator.addAfter(e);
-    }
-
-    @Override
-    public boolean hasNext() {
-        return iterator.hasPrevious();
-    }
-
-    @Override
-    public boolean hasPrevious() {
-        return iterator.hasNext();
-    }
-
-    @Override
-    public E next() {
-        return iterator.previous();
-    }
-
-    /**
-     * Next index.
-     *
-     * @return the int
-     */
-    @Override
-    public int nextIndex() {
-        return iterator.previousIndex();
-    }
-
-    @Override
-    public E previous() {
-        return iterator.next();
-    }
-
-    /**
-     * Previous index.
-     *
-     * @return the int
-     */
-    @Override
-    public int previousIndex() {
-        return iterator.nextIndex();
+        if (lastRet < 0) {
+            throw new IllegalStateException();
+        }
+        mutableList.insert(lastRet, e);
+        lastRet = -1;
+        nextIndex++;
+        previousIndex++;
     }
 
     @Override
     public void remove() {
-        iterator.remove();
+        if (lastRet < 0) {
+            throw new IllegalStateException();
+        }
+        mutableList.remove(lastRet);
+        lastRet = -1;
+        nextIndex--;
+        previousIndex--;
     }
 
     @Override
     public void set(final E e) {
-        iterator.set(e);
+        if (lastRet < 0) {
+            throw new IllegalStateException();
+        }
+        mutableList.set(lastRet, e);
     }
 }
